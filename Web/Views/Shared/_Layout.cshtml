@@ -37,6 +37,15 @@
         </nav>
     </header>
 
+    @if (TempData["ok"] != null)
+    {
+        <div class="wrap"><div class="alert alert-ok" style="margin-top:18px">@TempData["ok"]</div></div>
+    }
+    @if (TempData["err"] != null)
+    {
+        <div class="wrap"><div class="alert" style="margin-top:18px">@TempData["err"]</div></div>
+    }
+
     @RenderBody()
 
     <footer class="wrap">

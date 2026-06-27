@@ -56,6 +56,12 @@ namespace Web.Data
                 a.Role = UserRole.Administrator;
         }
 
+        public static void SaveAdmins()
+        {
+            File.WriteAllText(DataPath("admins.json"),
+                JsonConvert.SerializeObject(Admins, JsonStore<User>.Settings));
+        }
+
         public static User FindByUsername(string username)
         {
             if (string.IsNullOrEmpty(username))

@@ -1,0 +1,94 @@
+@model Web.Models.User
+@{
+    ViewBag.Title = "My profile";
+    var reservations = ViewBag.Reservations as System.Collections.Generic.List<Web.Models.Reservation>;
+    var accNames = ViewBag.AccNames as System.Collections.Generic.Dictionary<int, string>;
+    var statusFilter = (string)ViewBag.StatusFilter;
+    var statuses = new[] { "", "Created", "Approved", "Completed", "Cancelled" };
+}
+
+<div class="wrap" style="padding:40px 0 64px">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px">
+        <div>
+            <span class="kicker">@Model.Role</span>
+            <h1 class="serif" style="font-size:42px;margin-top:6px">@Model.FullName</h1>
+        </div>
+        <a href="@Url.Action("Edit", "Profile")" class="btn btn-ghost">Edit profile</a>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;border:1px solid var(--border);border-radius:14px;padding:24px;background:var(--surface-2)">
+        <div><div class="muted" style="font-size:12px">Username</div><div style="margin-top:3px">@Model.Username</div></div>
+        <div><div class="muted" style="font-size:12px">Email</div><div style="margin-top:3px">@Model.Email</div></div>
+        <div><div class="muted" style="font-size:12px">Date of birth</div><div style="margin-top:3px">@Model.DateOfBirth.ToString("dd/MM/yyyy")</div></div>
+        <div><div class="muted" style="font-size:12px">Gender</div><div style="margin-top:3px">@Model.Gender</div></div>
+    </div>
+
+    @if (Model.Role == Web.Models.UserRole.Guest)
+    {
+        <div style="margin-top:44px">
+            <h2 class="serif" style="font-size:30px;margin-bottom:18px">My reservations</h2>
+
+            <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+                @foreach (var s in statuses)
+                {
+                    var active = (statusFilter ?? "") == s;
+                    <a href="@Url.Action("Index", "Profile", new { status = s })"
+                       class="btn @(active ? "btn-gold" : "btn-ghost")" style="padding:8px 16px;font-size:12.5px">
+                        @(s == "" ? "All" : s)
+                    </a>
+                }
+            </div>
+
+            @if (reservations == null || !reservations.Any())
+            {
+                <p class="muted">No reservations@(string.IsNullOrEmpty(statusFilter) ? "" : " with this status") yet.</p>
+            }
+            else
+            {
+                <div style="border:1px solid var(--border);border-radius:14px;overflow:hidden">
+                    <table style="width:100%;border-collapse:collapse;font-size:14px">
+                        <thead>
+                            <tr style="background:var(--surface);color:var(--text-muted);font-size:12px;text-align:left">
+                                <th style="padding:14px 16px">Stay</th>
+                                <th style="padding:14px 16px">Dates</th>
+                                <th style="padding:14px 16px">Guests</th>
+                                <th style="padding:14px 16px">Total</th>
+                                <th style="padding:14px 16px">Status</th>
+                                <th style="padding:14px 16px"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var r in reservations)
+                            {
+                                var canCancel = (r.Status == Web.Models.ReservationStatus.Created || r.Status == Web.Models.ReservationStatus.Approved)
+                                    && (r.CheckIn - DateTime.Now).TotalHours >= 24;
+                                <tr style="border-top:1px solid var(--border-2)">
+                                    <td style="padding:14px 16px">
+                                        <a href="@Url.Action("Details", "Accommodations", new { id = r.AccommodationId })" class="gold">
+                                            @(accNames != null && accNames.ContainsKey(r.AccommodationId) ? accNames[r.AccommodationId] : "Stay #" + r.AccommodationId)
+                                        </a>
+                                    </td>
+                                    <td style="padding:14px 16px">@r.CheckIn.ToString("dd/MM/yyyy") &ndash; @r.CheckOut.ToString("dd/MM/yyyy") <span class="muted">(@r.Nights n)</span></td>
+                                    <td style="padding:14px 16px">@r.NumberOfGuests</td>
+                                    <td style="padding:14px 16px">&euro;@r.TotalPrice.ToString("0")</td>
+                                    <td style="padding:14px 16px"><span class="badge badge-@r.Status.ToString().ToLower()">@r.Status</span></td>
+                                    <td style="padding:14px 16px;text-align:right">
+                                        @if (canCancel)
+                                        {
+                                            using (Html.BeginForm("Cancel", "Reservations", FormMethod.Post, new { style = "display:inline" }))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@r.Id" />
+                                                <button type="submit" class="btn btn-ghost" style="padding:7px 14px;font-size:12px">Cancel</button>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    }
+</div>

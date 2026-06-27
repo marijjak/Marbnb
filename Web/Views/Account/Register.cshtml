@@ -1,0 +1,106 @@
+@model Web.Models.ViewModels.RegisterViewModel
+@{
+    ViewBag.Title = "Create account";
+}
+
+<div class="wrap" style="padding:44px 0">
+    <div class="auth" style="border:1px solid var(--border);border-radius:18px;overflow:hidden">
+        <div class="auth__brand">
+            <svg class="auth__bg" viewBox="0 0 360 560" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs>
+                    <linearGradient id="rb" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#3a3326" />
+                        <stop offset="0.5" stop-color="#5e3f27" />
+                        <stop offset="1" stop-color="#120d09" />
+                    </linearGradient>
+                </defs>
+                <rect width="360" height="560" fill="url(#rb)" />
+                <circle cx="250" cy="190" r="52" fill="#e0b066" opacity="0.4" />
+                <g fill="#100b07" opacity="0.85">
+                    <rect x="14" y="400" width="48" height="160" />
+                    <rect x="70" y="350" width="36" height="210" />
+                    <rect x="180" y="380" width="40" height="180" />
+                    <rect x="280" y="360" width="48" height="200" />
+                </g>
+            </svg>
+            <div class="auth__veil"></div>
+            <div style="position:relative" class="brand">
+                <span class="brand__mark">m</span>
+                <span class="brand__name">marbnb</span>
+            </div>
+            <div style="position:relative">
+                <h2 style="font-size:38px">Join the<br />collection.</h2>
+                <p class="muted" style="max-width:240px;margin-top:12px">Create an account to book unforgettable stays across the region.</p>
+            </div>
+            <div style="position:relative" class="serif muted">The art of staying</div>
+        </div>
+
+        <div class="auth__form">
+            <h2 style="font-size:30px">Create your account</h2>
+            <p class="muted" style="margin:4px 0 24px">You'll join as a guest.</p>
+
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "alert" })
+
+                <div class="form-row">
+                    <div class="field">
+                        <label>First name</label>
+                        @Html.TextBoxFor(m => m.FirstName, new { placeholder = "Ana" })
+                        @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "val" })
+                    </div>
+                    <div class="field">
+                        <label>Last name</label>
+                        @Html.TextBoxFor(m => m.LastName, new { placeholder = "Marković" })
+                        @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "val" })
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Username</label>
+                    @Html.TextBoxFor(m => m.Username, new { placeholder = "ana" })
+                    @Html.ValidationMessageFor(m => m.Username, "", new { @class = "val" })
+                </div>
+
+                <div class="field">
+                    <label>Email</label>
+                    @Html.TextBoxFor(m => m.Email, new { placeholder = "ana@gmail.com", type = "email" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "val" })
+                </div>
+
+                <div class="form-row">
+                    <div class="field">
+                        <label>Password</label>
+                        @Html.PasswordFor(m => m.Password, new { placeholder = "••••••••" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "val" })
+                    </div>
+                    <div class="field">
+                        <label>Confirm password</label>
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { placeholder = "••••••••" })
+                        @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "val" })
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="field">
+                        <label>Date of birth</label>
+                        @Html.TextBoxFor(m => m.DateOfBirth, new { type = "date" })
+                        @Html.ValidationMessageFor(m => m.DateOfBirth, "", new { @class = "val" })
+                    </div>
+                    <div class="field">
+                        <label>Gender</label>
+                        @Html.DropDownListFor(m => m.Gender, new SelectList(System.Enum.GetValues(typeof(Web.Models.Gender))))
+                        @Html.ValidationMessageFor(m => m.Gender, "", new { @class = "val" })
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-gold btn-block" style="margin-top:8px">Create account</button>
+            }
+
+            <p class="muted" style="text-align:center;margin-top:20px">
+                Already have an account? <a href="@Url.Action("Login", "Account")" class="gold">Log in</a>
+            </p>
+        </div>
+    </div>
+</div>

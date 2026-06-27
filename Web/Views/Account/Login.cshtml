@@ -1,0 +1,67 @@
+@model Web.Models.ViewModels.LoginViewModel
+@{
+    ViewBag.Title = "Log in";
+}
+
+<div class="wrap" style="padding:44px 0">
+    <div class="auth" style="border:1px solid var(--border);border-radius:18px;overflow:hidden">
+        <div class="auth__brand">
+            <svg class="auth__bg" viewBox="0 0 360 560" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs>
+                    <linearGradient id="ab" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#3a3326" />
+                        <stop offset="0.5" stop-color="#5e3f27" />
+                        <stop offset="1" stop-color="#120d09" />
+                    </linearGradient>
+                </defs>
+                <rect width="360" height="560" fill="url(#ab)" />
+                <circle cx="250" cy="190" r="52" fill="#e0b066" opacity="0.4" />
+                <g fill="#100b07" opacity="0.85">
+                    <rect x="14" y="400" width="48" height="160" />
+                    <rect x="70" y="350" width="36" height="210" />
+                    <rect x="180" y="380" width="40" height="180" />
+                    <rect x="280" y="360" width="48" height="200" />
+                </g>
+            </svg>
+            <div class="auth__veil"></div>
+            <div style="position:relative" class="brand">
+                <span class="brand__mark">m</span>
+                <span class="brand__name">marbnb</span>
+            </div>
+            <div style="position:relative">
+                <h2 style="font-size:38px">Welcome<br />back.</h2>
+                <p class="muted" style="max-width:240px;margin-top:12px">Sign in to manage your stays, reservations and reviews.</p>
+            </div>
+            <div style="position:relative" class="serif muted">The art of staying</div>
+        </div>
+
+        <div class="auth__form">
+            <h2 style="font-size:30px">Log in</h2>
+            <p class="muted" style="margin:4px 0 26px">Enter your details to continue.</p>
+
+            @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "alert" })
+
+                <div class="field">
+                    <label>Username</label>
+                    @Html.TextBoxFor(m => m.Username, new { placeholder = "ana" })
+                    @Html.ValidationMessageFor(m => m.Username, "", new { @class = "val" })
+                </div>
+
+                <div class="field">
+                    <label>Password</label>
+                    @Html.PasswordFor(m => m.Password, new { placeholder = "••••••••" })
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "val" })
+                </div>
+
+                <button type="submit" class="btn btn-gold btn-block" style="margin-top:8px">Log in</button>
+            }
+
+            <p class="muted" style="text-align:center;margin-top:22px">
+                New to marbnb? <a href="@Url.Action("Register", "Account")" class="gold">Create an account</a>
+            </p>
+        </div>
+    </div>
+</div>

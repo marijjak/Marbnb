@@ -1,33 +1,146 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+@model IEnumerable<Web.Models.Accommodation>
+@{
+    ViewBag.Title = "Stay beyond ordinary";
 }
 
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
-
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
+<section class="hero">
+    <svg class="hero__bg" viewBox="0 0 1180 480" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#3a3326" />
+                <stop offset="0.42" stop-color="#714c2b" />
+                <stop offset="0.68" stop-color="#3d2a1c" />
+                <stop offset="1" stop-color="#120d09" />
+            </linearGradient>
+        </defs>
+        <rect width="1180" height="480" fill="url(#sky)" />
+        <circle cx="880" cy="190" r="60" fill="#d8a85e" opacity="0.38" />
+        <circle cx="880" cy="190" r="36" fill="#e8c074" opacity="0.5" />
+        <g fill="#0f0a07" opacity="0.92">
+            <rect x="40" y="300" width="70" height="180" />
+            <rect x="120" y="240" width="52" height="240" />
+            <rect x="190" y="330" width="60" height="150" />
+            <rect x="520" y="280" width="46" height="200" />
+            <rect x="580" y="210" width="62" height="270" />
+            <rect x="660" y="310" width="44" height="170" />
+            <rect x="980" y="260" width="70" height="220" />
+            <rect x="1060" y="320" width="56" height="160" />
+            <rect x="760" y="340" width="190" height="140" />
+        </g>
+    </svg>
+    <div class="hero__veil"></div>
+    <div class="wrap" style="position:relative">
+        <div class="hero__inner">
+            <span class="kicker">Exclusive stays</span>
+            <h1 class="hero__title">Stay<br />beyond<br /><span class="gold">ordinary</span></h1>
+            <p class="hero__sub">Handpicked stays for those who expect a little more from a night away.</p>
+            <div class="hero__cta">
+                <a href="#featured" class="btn btn-gold">Explore stays &rarr;</a>
+                <a href="@Url.Action("Register", "Account")" class="btn btn-ghost">Become a member</a>
+            </div>
+        </div>
     </div>
-</main>
+</section>
+
+<div class="wrap">
+    <div class="searchbar">
+        @using (Html.BeginForm("Index", "Home", FormMethod.Get))
+        {
+            <div class="search-field">
+                <label>Where</label>
+                <input type="text" name="city" placeholder="Anywhere" />
+            </div>
+            <div class="search-field">
+                <label>Type</label>
+                <select name="type">
+                    <option value="">Any type</option>
+                    <option>Apartment</option>
+                    <option>Hotel</option>
+                    <option>Hostel</option>
+                    <option>Villa</option>
+                    <option>Cottage</option>
+                    <option>Studio</option>
+                    <option>Room</option>
+                </select>
+            </div>
+            <div class="search-field">
+                <label>Guests</label>
+                <input type="number" name="guests" min="1" placeholder="2" />
+            </div>
+            <button type="submit" class="btn btn-gold">Search</button>
+        }
+    </div>
+</div>
+
+<section class="section wrap" id="featured">
+    <div class="section__head">
+        <div>
+            <span class="kicker">Featured properties</span>
+            <h2 class="section__title">Discover our finest stays</h2>
+        </div>
+    </div>
+
+    <div class="grid-stays">
+        @foreach (var acc in Model)
+        {
+            <a class="stay" href="@Url.Action("Details", "Accommodations", new { id = acc.Id })">
+                <div class="stay__img" @(string.IsNullOrEmpty(acc.ImagePath) ? "" : "style=background-image:url(" + Url.Content(acc.ImagePath) + ")")>
+                    @if (string.IsNullOrEmpty(acc.ImagePath))
+                    {
+                        <span style="font-family:'Cormorant Garamond',serif;font-size:64px;color:rgba(201,163,94,.22)">@acc.Name.Substring(0, 1)</span>
+                    }
+                    <span class="stay__tag">Featured</span>
+                    <span class="stay__rate">@(acc.AverageRating > 0 ? "★ " + acc.AverageRating.ToString("0.0") : "New")</span>
+                </div>
+                <div class="stay__body">
+                    <div class="stay__loc">@acc.City, Serbia</div>
+                    <div class="stay__name">@acc.Name</div>
+                    <div class="stay__foot">
+                        <span class="stay__meta">@acc.Type &middot; up to @acc.MaxGuests guests</span>
+                        <span class="stay__price">&euro;@acc.PricePerNight.ToString("0")<span> /night</span></span>
+                    </div>
+                </div>
+            </a>
+        }
+    </div>
+</section>
+
+<section class="section wrap">
+    <div class="section__head">
+        <div>
+            <span class="kicker">Why marbnb</span>
+            <h2 class="section__title">Made for effortless stays</h2>
+        </div>
+    </div>
+    <div class="why">
+        <div class="why__item">
+            <div class="ic">&#9670;</div>
+            <h4>Handpicked stays</h4>
+            <p>A selective, quality-first collection across the region.</p>
+        </div>
+        <div class="why__item">
+            <div class="ic">&#9733;</div>
+            <h4>Verified hosts</h4>
+            <p>Every host is reviewed and approved before listing.</p>
+        </div>
+        <div class="why__item">
+            <div class="ic">&#9889;</div>
+            <h4>Instant booking</h4>
+            <p>Reserve your stay in just a few calm clicks.</p>
+        </div>
+        <div class="why__item">
+            <div class="ic">&#128274;</div>
+            <h4>Secure by design</h4>
+            <p>Your data stays private and protected.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section wrap" style="padding-top:0">
+    <div class="stats">
+        <div><div class="stat__num">@ViewBag.TotalStays</div><div class="stat__lbl">Curated stays</div></div>
+        <div><div class="stat__num">@ViewBag.TotalCities</div><div class="stat__lbl">Cities</div></div>
+        <div><div class="stat__num">@ViewBag.AvgRating</div><div class="stat__lbl">Average rating</div></div>
+        <div><div class="stat__num">@(ViewBag.TotalGuests)+</div><div class="stat__lbl">Happy guests</div></div>
+    </div>
+</section>

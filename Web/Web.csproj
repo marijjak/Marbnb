@@ -122,6 +122,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AccommodationsController.cs" />
     <Compile Include="Data\JsonStore.cs" />
     <Compile Include="Data\Database.cs" />
     <Compile Include="Infrastructure\RoleAuthorizeAttribute.cs" />
@@ -190,6 +191,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Accommodations\Details.cshtml" />
     <Content Include="Content\marbnb.css" />
     <Content Include="Content\fonts\inter-latin-400-normal.woff2" />
     <Content Include="Content\fonts\inter-latin-500-normal.woff2" />

@@ -1,6 +1,10 @@
 @model IEnumerable<Web.Models.Accommodation>
 @{
     ViewBag.Title = "Stay beyond ordinary";
+    var fType = (string)ViewBag.FType;
+    var fSort = (string)ViewBag.FSort;
+    Func<string, string> typeSel = v => v == fType ? "selected" : null;
+    Func<string, string> sortSel = v => v == fSort ? "selected" : null;
 }
 
 <section class="hero">
@@ -43,29 +47,48 @@
 </section>
 
 <div class="wrap">
-    <div class="searchbar">
+    <div class="searchbar" style="flex-wrap:wrap;max-width:none">
         @using (Html.BeginForm("Index", "Home", FormMethod.Get))
         {
-            <div class="search-field">
-                <label>Where</label>
-                <input type="text" name="city" placeholder="Anywhere" />
+            <div class="search-field" style="flex:1 1 150px">
+                <label>Name</label>
+                <input type="text" name="name" value="@ViewBag.FName" placeholder="Any name" />
             </div>
-            <div class="search-field">
+            <div class="search-field" style="flex:1 1 130px">
+                <label>City</label>
+                <input type="text" name="city" value="@ViewBag.FCity" placeholder="Anywhere" />
+            </div>
+            <div class="search-field" style="flex:1 1 120px">
                 <label>Type</label>
                 <select name="type">
                     <option value="">Any type</option>
-                    <option>Apartment</option>
-                    <option>Hotel</option>
-                    <option>Hostel</option>
-                    <option>Villa</option>
-                    <option>Cottage</option>
-                    <option>Studio</option>
-                    <option>Room</option>
+                    <option value="Apartment" @typeSel("Apartment")>Apartment</option>
+                    <option value="Hotel" @typeSel("Hotel")>Hotel</option>
+                    <option value="Hostel" @typeSel("Hostel")>Hostel</option>
+                    <option value="Villa" @typeSel("Villa")>Villa</option>
+                    <option value="Cottage" @typeSel("Cottage")>Cottage</option>
+                    <option value="Studio" @typeSel("Studio")>Studio</option>
+                    <option value="Room" @typeSel("Room")>Room</option>
                 </select>
             </div>
-            <div class="search-field">
-                <label>Guests</label>
-                <input type="number" name="guests" min="1" placeholder="2" />
+            <div class="search-field" style="flex:0 1 90px">
+                <label>Min &euro;</label>
+                <input type="number" name="minPrice" min="0" value="@ViewBag.FMin" placeholder="0" />
+            </div>
+            <div class="search-field" style="flex:0 1 90px">
+                <label>Max &euro;</label>
+                <input type="number" name="maxPrice" min="0" value="@ViewBag.FMax" placeholder="500" />
+            </div>
+            <div class="search-field" style="flex:1 1 140px">
+                <label>Sort by</label>
+                <select name="sort">
+                    <option value="date_desc" @sortSel("date_desc")>Newest first</option>
+                    <option value="date_asc" @sortSel("date_asc")>Oldest first</option>
+                    <option value="price_asc" @sortSel("price_asc")>Price: low to high</option>
+                    <option value="price_desc" @sortSel("price_desc")>Price: high to low</option>
+                    <option value="name_asc" @sortSel("name_asc")>Name: A to Z</option>
+                    <option value="name_desc" @sortSel("name_desc")>Name: Z to A</option>
+                </select>
             </div>
             <button type="submit" class="btn btn-gold">Search</button>
         }
@@ -75,34 +98,48 @@
 <section class="section wrap" id="featured">
     <div class="section__head">
         <div>
-            <span class="kicker">Featured properties</span>
-            <h2 class="section__title">Discover our finest stays</h2>
+            <span class="kicker">@(ViewBag.IsFiltered == true ? "Search results" : "Featured properties")</span>
+            <h2 class="section__title">@(ViewBag.IsFiltered == true ? Model.Count() + " stays found" : "Discover our finest stays")</h2>
         </div>
-    </div>
-
-    <div class="grid-stays">
-        @foreach (var acc in Model)
+        @if (ViewBag.IsFiltered == true)
         {
-            <a class="stay" href="@Url.Action("Details", "Accommodations", new { id = acc.Id })">
-                <div class="stay__img" @(string.IsNullOrEmpty(acc.ImagePath) ? "" : "style=background-image:url(" + Url.Content(acc.ImagePath) + ")")>
-                    @if (string.IsNullOrEmpty(acc.ImagePath))
-                    {
-                        <span style="font-family:'Cormorant Garamond',serif;font-size:64px;color:rgba(201,163,94,.22)">@acc.Name.Substring(0, 1)</span>
-                    }
-                    <span class="stay__tag">Featured</span>
-                    <span class="stay__rate">@(acc.AverageRating > 0 ? "★ " + acc.AverageRating.ToString("0.0") : "New")</span>
-                </div>
-                <div class="stay__body">
-                    <div class="stay__loc">@acc.City, Serbia</div>
-                    <div class="stay__name">@acc.Name</div>
-                    <div class="stay__foot">
-                        <span class="stay__meta">@acc.Type &middot; up to @acc.MaxGuests guests</span>
-                        <span class="stay__price">&euro;@acc.PricePerNight.ToString("0")<span> /night</span></span>
-                    </div>
-                </div>
-            </a>
+            <a href="@Url.Action("Index", "Home")" class="muted" style="font-size:13px">Clear filters &times;</a>
         }
     </div>
+
+    @if (!Model.Any())
+    {
+        <div style="text-align:center;padding:60px 0;color:var(--text-muted)">
+            <div class="serif" style="font-size:26px;color:var(--text-2);margin-bottom:8px">No stays match your search</div>
+            <p>Try widening your filters or <a href="@Url.Action("Index", "Home")" class="gold">clear them</a>.</p>
+        </div>
+    }
+    else
+    {
+        <div class="grid-stays">
+            @foreach (var acc in Model)
+            {
+                <a class="stay" href="@Url.Action("Details", "Accommodations", new { id = acc.Id })">
+                    <div class="stay__img" @(string.IsNullOrEmpty(acc.ImagePath) ? "" : "style=background-image:url(" + Url.Content(acc.ImagePath) + ")")>
+                        @if (string.IsNullOrEmpty(acc.ImagePath))
+                        {
+                            <span style="font-family:'Cormorant Garamond',serif;font-size:64px;color:rgba(201,163,94,.22)">@acc.Name.Substring(0, 1)</span>
+                        }
+                        <span class="stay__tag">@acc.Type</span>
+                        <span class="stay__rate">@(acc.AverageRating > 0 ? "★ " + acc.AverageRating.ToString("0.0") : "New")</span>
+                    </div>
+                    <div class="stay__body">
+                        <div class="stay__loc">@acc.City, Serbia</div>
+                        <div class="stay__name">@acc.Name</div>
+                        <div class="stay__foot">
+                            <span class="stay__meta">Up to @acc.MaxGuests guests</span>
+                            <span class="stay__price">&euro;@acc.PricePerNight.ToString("0")<span> /night</span></span>
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+    }
 </section>
 
 <section class="section wrap">

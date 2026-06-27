@@ -1,0 +1,118 @@
+@model Web.Models.Accommodation
+@{
+    ViewBag.Title = Model.Name;
+    var currentUser = Session["username"] as string;
+    var currentRole = Session["role"] as string;
+    var reviewerNames = ViewBag.ReviewerNames as System.Collections.Generic.Dictionary<string, string>;
+}
+
+<div class="wrap" style="padding:34px 0 64px">
+    <a href="@Url.Action("Index", "Home")" class="muted" style="font-size:13px">&larr; Back to stays</a>
+
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin:18px 0 20px;gap:20px;flex-wrap:wrap">
+        <div>
+            <span class="kicker">@Model.Type</span>
+            <h1 class="serif" style="font-size:46px;margin:8px 0 6px">@Model.Name</h1>
+            <div class="muted">@Model.Address, @Model.City, Serbia</div>
+        </div>
+        <div style="text-align:right">
+            @if (Model.AverageRating > 0)
+            {
+                <div class="gold serif" style="font-size:30px">★ @Model.AverageRating.ToString("0.0")</div>
+                <div class="muted" style="font-size:12px">@Model.Reviews.Count review@(Model.Reviews.Count == 1 ? "" : "s")</div>
+            }
+            else
+            {
+                <div class="gold serif" style="font-size:24px">New</div>
+            }
+        </div>
+    </div>
+
+    <div class="stay__img" style="height:360px;border-radius:16px;@(string.IsNullOrEmpty(Model.ImagePath) ? "" : "background-image:url(" + Url.Content(Model.ImagePath) + ")")">
+        @if (string.IsNullOrEmpty(Model.ImagePath))
+        {
+            <span style="font-family:'Cormorant Garamond',serif;font-size:120px;color:rgba(201,163,94,.18)">@Model.Name.Substring(0, 1)</span>
+        }
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.7fr 1fr;gap:40px;margin-top:36px">
+        <div>
+            <h3 class="serif" style="font-size:26px;margin-bottom:10px">About this stay</h3>
+            <p class="muted" style="line-height:1.8">@Model.Description</p>
+
+            <div style="display:flex;gap:40px;margin:24px 0;border-top:1px solid var(--border-2);border-bottom:1px solid var(--border-2);padding:20px 0">
+                <div><div class="muted" style="font-size:12px">Type</div><div class="serif" style="font-size:20px">@Model.Type</div></div>
+                <div><div class="muted" style="font-size:12px">Max guests</div><div class="serif" style="font-size:20px">@Model.MaxGuests</div></div>
+                <div><div class="muted" style="font-size:12px">City</div><div class="serif" style="font-size:20px">@Model.City</div></div>
+                <div><div class="muted" style="font-size:12px">Host</div><div class="serif" style="font-size:20px">@ViewBag.HostName</div></div>
+            </div>
+
+            <h3 class="serif" style="font-size:26px;margin:30px 0 16px">Reviews</h3>
+            @if (!Model.Reviews.Any())
+            {
+                <p class="muted">No reviews yet. Be the first to stay and share your experience.</p>
+            }
+            else
+            {
+                foreach (var r in Model.Reviews)
+                {
+                    <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:14px;background:var(--surface)">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                            <strong class="serif" style="font-size:19px;font-weight:600">@r.Title</strong>
+                            <span class="gold">@Html.Raw(string.Concat(System.Linq.Enumerable.Repeat("&#9733;", r.Rating)))<span style="color:#3a342a">@Html.Raw(string.Concat(System.Linq.Enumerable.Repeat("&#9733;", 5 - r.Rating)))</span></span>
+                        </div>
+                        <p class="muted" style="margin:0 0 10px;line-height:1.7">@r.Content</p>
+                        <div class="muted" style="font-size:12px">
+                            @(reviewerNames != null && reviewerNames.ContainsKey(r.ReviewerUsername) ? reviewerNames[r.ReviewerUsername] : r.ReviewerUsername)
+                            &middot; @r.CreatedAt.ToString("dd/MM/yyyy")
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <div>
+            <div style="border:1px solid var(--border);border-radius:16px;padding:24px;background:var(--surface-2);position:sticky;top:20px">
+                <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:18px">
+                    <span class="serif gold" style="font-size:34px">&euro;@Model.PricePerNight.ToString("0")</span>
+                    <span class="muted">/ night</span>
+                </div>
+
+                @if (!Model.IsAvailable)
+                {
+                    <div class="alert">This stay is currently unavailable.</div>
+                }
+                else if (currentUser == null)
+                {
+                    <p class="muted" style="margin-bottom:16px">Log in as a guest to book this stay.</p>
+                    <a href="@Url.Action("Login", "Account")" class="btn btn-gold btn-block">Log in to reserve</a>
+                }
+                else if (currentRole == "Guest")
+                {
+                    using (Html.BeginForm("Create", "Reservations", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="accommodationId" value="@Model.Id" />
+                        <div class="field">
+                            <label>Check-in</label>
+                            <input type="date" name="checkIn" required />
+                        </div>
+                        <div class="field">
+                            <label>Check-out</label>
+                            <input type="date" name="checkOut" required />
+                        </div>
+                        <div class="field">
+                            <label>Guests (max @Model.MaxGuests)</label>
+                            <input type="number" name="numberOfGuests" min="1" max="@Model.MaxGuests" value="1" required />
+                        </div>
+                        <button type="submit" class="btn btn-gold btn-block">Reserve</button>
+                    }
+                }
+                else
+                {
+                    <p class="muted">Only guests can make reservations.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

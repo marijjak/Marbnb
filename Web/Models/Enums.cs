@@ -1,6 +1,5 @@
 namespace Web.Models
 {
-    // Uloge korisnika (Gost, Domaćin, Administrator)
     public enum UserRole
     {
         Guest,
@@ -8,7 +7,6 @@ namespace Web.Models
         Administrator
     }
 
-    // Pol korisnika
     public enum Gender
     {
         Female,
@@ -16,7 +14,6 @@ namespace Web.Models
         Other
     }
 
-    // Tip smeštajnog objekta (Hotel, Apartman, Hostel, ...)
     public enum AccommodationType
     {
         Apartment,
@@ -28,9 +25,6 @@ namespace Web.Models
         Room
     }
 
-    // Status rezervacije.
-    // Mapiranje na specifikaciju: Created=KREIRANA, Approved=ODOBRENA,
-    // Cancelled=OTKAZANA, Completed=ZAVRŠENA
     public enum ReservationStatus
     {
         Created,
@@ -39,8 +33,6 @@ namespace Web.Models
         Completed
     }
 
-    // Status recenzije.
-    // Created=Kreirana, Approved=Odobrena, Rejected=Odbijena
     public enum ReviewStatus
     {
         Created,

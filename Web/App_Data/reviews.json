@@ -1,0 +1,38 @@
+[
+  {
+    "AccommodationId": 1,
+    "ReviewerUsername": "ana",
+    "Title": "Stunning city loft",
+    "Content": "Spotless, stylish and perfectly located. Would book again.",
+    "Rating": 5,
+    "ImagePath": null,
+    "Status": "Approved",
+    "CreatedAt": "11/06/2026",
+    "Id": 1,
+    "IsDeleted": false
+  },
+  {
+    "AccommodationId": 1,
+    "ReviewerUsername": "nikola",
+    "Title": "Great location",
+    "Content": "Comfortable bed and amazing view, a bit noisy at night.",
+    "Rating": 4,
+    "ImagePath": null,
+    "Status": "Created",
+    "CreatedAt": "22/05/2026",
+    "Id": 2,
+    "IsDeleted": false
+  },
+  {
+    "AccommodationId": 2,
+    "ReviewerUsername": "milica",
+    "Title": "Not for me",
+    "Content": "Hard to reach without a car.",
+    "Rating": 2,
+    "ImagePath": null,
+    "Status": "Rejected",
+    "CreatedAt": "03/06/2026",
+    "Id": 3,
+    "IsDeleted": false
+  }
+]

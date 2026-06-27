@@ -1,0 +1,68 @@
+[
+  {
+    "AccommodationId": 1,
+    "GuestUsername": "ana",
+    "CheckIn": "07/06/2026",
+    "CheckOut": "10/06/2026",
+    "NumberOfGuests": 2,
+    "TotalPrice": 144.0,
+    "Status": "Completed",
+    "Id": 1,
+    "IsDeleted": false
+  },
+  {
+    "AccommodationId": 2,
+    "GuestUsername": "nikola",
+    "CheckIn": "07/07/2026",
+    "CheckOut": "11/07/2026",
+    "NumberOfGuests": 5,
+    "TotalPrice": 328.0,
+    "Status": "Approved",
+    "Id": 2,
+    "IsDeleted": false
+  },
+  {
+    "AccommodationId": 3,
+    "GuestUsername": "milica",
+    "CheckIn": "17/07/2026",
+    "CheckOut": "19/07/2026",
+    "NumberOfGuests": 2,
+    "TotalPrice": 220.0,
+    "Status": "Created",
+    "Id": 3,
+    "IsDeleted": false
+  },
+  {
+    "AccommodationId": 5,
+    "GuestUsername": "ana",
+    "CheckIn": "02/07/2026",
+    "CheckOut": "05/07/2026",
+    "NumberOfGuests": 4,
+    "TotalPrice": 180.0,
+    "Status": "Cancelled",
+    "Id": 4,
+    "IsDeleted": false
+  },
+  {
+    "AccommodationId": 1,
+    "GuestUsername": "nikola",
+    "CheckIn": "18/05/2026",
+    "CheckOut": "21/05/2026",
+    "NumberOfGuests": 3,
+    "TotalPrice": 144.0,
+    "Status": "Completed",
+    "Id": 5,
+    "IsDeleted": false
+  },
+  {
+    "AccommodationId": 2,
+    "GuestUsername": "milica",
+    "CheckIn": "28/05/2026",
+    "CheckOut": "02/06/2026",
+    "NumberOfGuests": 4,
+    "TotalPrice": 410.0,
+    "Status": "Completed",
+    "Id": 6,
+    "IsDeleted": false
+  }
+]

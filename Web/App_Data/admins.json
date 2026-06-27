@@ -1,0 +1,14 @@
+[
+  {
+    "Id": 1,
+    "IsDeleted": false,
+    "Username": "admin",
+    "Password": "admin123",
+    "FirstName": "Site",
+    "LastName": "Administrator",
+    "Email": "admin@marbnb.com",
+    "DateOfBirth": "01/01/1990",
+    "Gender": "Other",
+    "Role": "Administrator"
+  }
+]

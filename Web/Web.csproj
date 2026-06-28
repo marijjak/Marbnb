@@ -214,6 +214,7 @@
     <Content Include="Content\marbnb.css" />
     <Content Include="Content\img\*.png" />
     <Content Include="Content\img\*.jpg" />
+    <Content Include="Content\img\*.svg" />
     <Content Include="Content\img\moskva_1.png" />
     <Content Include="Content\img\moskva_2.png" />
     <Content Include="Content\img\moskva_3.png" />

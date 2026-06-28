@@ -1,0 +1,66 @@
+@model IEnumerable<Web.Models.Review>
+@{
+    ViewBag.Title = "Moderate reviews";
+    var accNames = ViewBag.AccNames as System.Collections.Generic.Dictionary<int, string>;
+    var reviewerNames = ViewBag.ReviewerNames as System.Collections.Generic.Dictionary<string, string>;
+}
+
+<div class="wrap" style="padding:40px 0 64px">
+    <span class="kicker">Administrator</span>
+    <h1 class="serif" style="font-size:40px;margin:6px 0 6px">Reviews</h1>
+    <div style="display:flex;gap:8px;margin:6px 0 22px;flex-wrap:wrap">
+        <a href="@Url.Action("Users", "Admin")" class="btn btn-ghost" style="padding:7px 14px;font-size:12.5px">Users</a>
+        <a href="@Url.Action("Accommodations", "Admin")" class="btn btn-ghost" style="padding:7px 14px;font-size:12.5px">Listings</a>
+        <a href="@Url.Action("Reservations", "Admin")" class="btn btn-ghost" style="padding:7px 14px;font-size:12.5px">Reservations</a>
+        <a href="@Url.Action("Reviews", "Admin")" class="btn btn-gold" style="padding:7px 14px;font-size:12.5px">Reviews</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <p class="muted">No reviews yet.</p>
+    }
+    else
+    {
+        foreach (var r in Model)
+        {
+            <div style="border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:14px;background:var(--surface)">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:12px;flex-wrap:wrap">
+                    <div>
+                        <strong class="serif" style="font-size:20px;font-weight:600">@r.Title</strong>
+                        <span class="gold" style="margin-left:10px">@Html.Raw(string.Concat(System.Linq.Enumerable.Repeat("&#9733;", r.Rating)))</span>
+                    </div>
+                    <span class="badge badge-@r.Status.ToString().ToLower()">@r.Status</span>
+                </div>
+                <p class="muted" style="margin:0 0 10px;line-height:1.7">@r.Content</p>
+                @if (!string.IsNullOrEmpty(r.ImagePath))
+                {
+                    <img src="@Url.Content(r.ImagePath)" alt="Review photo" style="max-width:160px;border-radius:8px;margin:0 0 10px" />
+                }
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+                    <span class="muted" style="font-size:12px">
+                        @(reviewerNames != null && reviewerNames.ContainsKey(r.ReviewerUsername) ? reviewerNames[r.ReviewerUsername] : r.ReviewerUsername)
+                        on @(accNames != null && accNames.ContainsKey(r.AccommodationId) ? accNames[r.AccommodationId] : "#" + r.AccommodationId)
+                        &middot; @r.CreatedAt.ToString("dd/MM/yyyy")
+                    </span>
+                    @if (r.Status == Web.Models.ReviewStatus.Created)
+                    {
+                        <span style="white-space:nowrap">
+                            @using (Html.BeginForm("ApproveReview", "Admin", FormMethod.Post, new { style = "display:inline" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@r.Id" />
+                                <button type="submit" class="btn btn-gold" style="padding:6px 14px;font-size:12px">Approve</button>
+                            }
+                            @using (Html.BeginForm("RejectReview", "Admin", FormMethod.Post, new { style = "display:inline;margin-left:6px" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@r.Id" />
+                                <button type="submit" class="btn btn-ghost" style="padding:6px 14px;font-size:12px">Reject</button>
+                            }
+                        </span>
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>

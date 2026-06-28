@@ -1,0 +1,90 @@
+@model IEnumerable<Web.Models.User>
+@{
+    ViewBag.Title = "Manage users";
+    var fRole = (string)ViewBag.FRole;
+    var fSort = (string)ViewBag.FSort;
+    Func<string, string> rs = v => v == fRole ? "selected" : null;
+    Func<string, string> ss = v => v == fSort ? "selected" : null;
+}
+
+<div class="wrap" style="padding:40px 0 64px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div><span class="kicker">Administrator</span><h1 class="serif" style="font-size:40px;margin-top:6px">Users</h1></div>
+        <a href="@Url.Action("CreateHost", "Admin")" class="btn btn-gold">+ Add host</a>
+    </div>
+    <div style="display:flex;gap:8px;margin:6px 0 22px;flex-wrap:wrap">
+        <a href="@Url.Action("Users", "Admin")" class="btn btn-ghost" style="padding:7px 14px;font-size:12.5px">Users</a>
+        <a href="@Url.Action("Accommodations", "Admin")" class="btn btn-ghost" style="padding:7px 14px;font-size:12.5px">Listings</a>
+        <a href="@Url.Action("Reservations", "Admin")" class="btn btn-ghost" style="padding:7px 14px;font-size:12.5px">Reservations</a>
+        <a href="@Url.Action("Reviews", "Admin")" class="btn btn-ghost" style="padding:7px 14px;font-size:12.5px">Reviews</a>
+    </div>
+
+    <div class="searchbar" style="flex-wrap:wrap;max-width:none;margin-bottom:24px">
+        @using (Html.BeginForm("Users", "Admin", FormMethod.Get))
+        {
+            <div class="search-field" style="flex:1 1 130px"><label>First name</label><input type="text" name="firstName" value="@ViewBag.FFirst" /></div>
+            <div class="search-field" style="flex:1 1 130px"><label>Last name</label><input type="text" name="lastName" value="@ViewBag.FLast" /></div>
+            <div class="search-field" style="flex:1 1 110px">
+                <label>Role</label>
+                <select name="role"><option value="">Any</option><option value="Guest" @rs("Guest")>Guest</option><option value="Host" @rs("Host")>Host</option></select>
+            </div>
+            <div class="search-field" style="flex:1 1 120px"><label>Born from</label><input type="date" name="dobFrom" value="@ViewBag.FDobFrom" /></div>
+            <div class="search-field" style="flex:1 1 120px"><label>Born to</label><input type="date" name="dobTo" value="@ViewBag.FDobTo" /></div>
+            <div class="search-field" style="flex:1 1 140px">
+                <label>Sort by</label>
+                <select name="sort">
+                    <option value="name_asc" @ss("name_asc")>Name A–Z</option>
+                    <option value="name_desc" @ss("name_desc")>Name Z–A</option>
+                    <option value="dob_asc" @ss("dob_asc")>Born oldest</option>
+                    <option value="dob_desc" @ss("dob_desc")>Born newest</option>
+                    <option value="role_asc" @ss("role_asc")>Role A–Z</option>
+                    <option value="role_desc" @ss("role_desc")>Role Z–A</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-gold">Search</button>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <p class="muted">No users match your search.</p>
+    }
+    else
+    {
+        <div style="border:1px solid var(--border);border-radius:14px;overflow:hidden">
+            <table style="width:100%;border-collapse:collapse;font-size:14px">
+                <thead>
+                    <tr style="background:var(--surface);color:var(--text-muted);font-size:12px;text-align:left">
+                        <th style="padding:13px 16px">Name</th>
+                        <th style="padding:13px 16px">Username</th>
+                        <th style="padding:13px 16px">Email</th>
+                        <th style="padding:13px 16px">Born</th>
+                        <th style="padding:13px 16px">Role</th>
+                        <th style="padding:13px 16px"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var u in Model)
+                    {
+                        <tr style="border-top:1px solid var(--border-2)">
+                            <td style="padding:13px 16px">@u.FullName</td>
+                            <td style="padding:13px 16px">@u.Username</td>
+                            <td style="padding:13px 16px">@u.Email</td>
+                            <td style="padding:13px 16px">@u.DateOfBirth.ToString("dd/MM/yyyy")</td>
+                            <td style="padding:13px 16px"><span class="badge @(u.Role == Web.Models.UserRole.Host ? "badge-approved" : "badge-completed")">@u.Role</span></td>
+                            <td style="padding:13px 16px;text-align:right;white-space:nowrap">
+                                <a href="@Url.Action("EditUser", "Admin", new { id = u.Id })" class="btn btn-ghost" style="padding:6px 12px;font-size:12px">Edit</a>
+                                @using (Html.BeginForm("DeleteUser", "Admin", FormMethod.Post, new { style = "display:inline;margin-left:6px", onsubmit = "return confirm('Delete this user?')" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@u.Id" />
+                                    <button type="submit" class="btn btn-ghost" style="padding:6px 12px;font-size:12px">Delete</button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

@@ -27,6 +27,27 @@
         <div><div class="muted" style="font-size:12px">Gender</div><div style="margin-top:3px">@Model.Gender</div></div>
     </div>
 
+    @if (Model.Role == Web.Models.UserRole.Administrator)
+    {
+        <div style="margin-top:44px">
+            <h2 class="serif" style="font-size:30px;margin-bottom:18px">Admin panel</h2>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">
+                @foreach (var card in new[] {
+                    new { a = "Users", t = "Users", d = "Guests and hosts" },
+                    new { a = "Accommodations", t = "Listings", d = "All properties" },
+                    new { a = "Reservations", t = "Reservations", d = "All bookings" },
+                    new { a = "Reviews", t = "Reviews", d = "Approve or reject" }
+                })
+                {
+                    <a href="@Url.Action(card.a, "Admin")" style="border:1px solid var(--border);border-radius:14px;padding:22px;background:var(--surface-2);display:block">
+                        <div class="serif gold" style="font-size:22px;margin-bottom:4px">@card.t</div>
+                        <div class="muted" style="font-size:12.5px">@card.d</div>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+
     @if (Model.Role == Web.Models.UserRole.Host)
     {
         <div style="margin-top:44px">

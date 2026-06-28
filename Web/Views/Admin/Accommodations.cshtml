@@ -1,0 +1,74 @@
+@model IEnumerable<Web.Models.Accommodation>
+@{
+    ViewBag.Title = "All listings";
+    var fav = (string)ViewBag.FAvailability;
+    var fsort = (string)ViewBag.FSort ?? "date_desc";
+}
+
+<div class="wrap" style="padding:40px 0 64px">
+    <span class="kicker">Administrator</span>
+    <h1 class="serif" style="font-size:40px;margin:6px 0 6px">All listings</h1>
+    <div style="display:flex;gap:8px;margin:6px 0 22px;flex-wrap:wrap">
+        <a href="@Url.Action("Users", "Admin")" class="btn btn-ghost" style="padding:7px 14px;font-size:12.5px">Users</a>
+        <a href="@Url.Action("Accommodations", "Admin")" class="btn btn-gold" style="padding:7px 14px;font-size:12.5px">Listings</a>
+        <a href="@Url.Action("Reservations", "Admin")" class="btn btn-ghost" style="padding:7px 14px;font-size:12.5px">Reservations</a>
+        <a href="@Url.Action("Reviews", "Admin")" class="btn btn-ghost" style="padding:7px 14px;font-size:12.5px">Reviews</a>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px">
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+            @foreach (var f in new[] { new { v = "", t = "All" }, new { v = "available", t = "Available" }, new { v = "unavailable", t = "Unavailable" } })
+            {
+                <a href="@Url.Action("Accommodations", "Admin", new { availability = f.v, sort = fsort })" class="btn @((fav ?? "") == f.v ? "btn-gold" : "btn-ghost")" style="padding:8px 16px;font-size:12.5px">@f.t</a>
+            }
+        </div>
+        @using (Html.BeginForm("Accommodations", "Admin", FormMethod.Get))
+        {
+            <input type="hidden" name="availability" value="@fav" />
+            <select name="sort" onchange="this.form.submit()" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 12px;font-size:12.5px">
+                <option value="date_desc" @(fsort == "date_desc" ? "selected" : null)>Newest</option>
+                <option value="date_asc" @(fsort == "date_asc" ? "selected" : null)>Oldest</option>
+                <option value="price_asc" @(fsort == "price_asc" ? "selected" : null)>Price ↑</option>
+                <option value="price_desc" @(fsort == "price_desc" ? "selected" : null)>Price ↓</option>
+                <option value="name_asc" @(fsort == "name_asc" ? "selected" : null)>Name A–Z</option>
+                <option value="name_desc" @(fsort == "name_desc" ? "selected" : null)>Name Z–A</option>
+            </select>
+        }
+    </div>
+
+    <div style="border:1px solid var(--border);border-radius:14px;overflow:hidden">
+        <table style="width:100%;border-collapse:collapse;font-size:14px">
+            <thead>
+                <tr style="background:var(--surface);color:var(--text-muted);font-size:12px;text-align:left">
+                    <th style="padding:13px 16px">Name</th>
+                    <th style="padding:13px 16px">Host</th>
+                    <th style="padding:13px 16px">City</th>
+                    <th style="padding:13px 16px">Price</th>
+                    <th style="padding:13px 16px">Status</th>
+                    <th style="padding:13px 16px"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in Model)
+                {
+                    <tr style="border-top:1px solid var(--border-2)">
+                        <td style="padding:13px 16px"><a href="@Url.Action("Details", "Accommodations", new { id = a.Id })" class="gold">@a.Name</a></td>
+                        <td style="padding:13px 16px">@a.HostUsername</td>
+                        <td style="padding:13px 16px">@a.City</td>
+                        <td style="padding:13px 16px">&euro;@a.PricePerNight.ToString("0")</td>
+                        <td style="padding:13px 16px"><span class="badge @(a.IsAvailable ? "badge-approved" : "badge-cancelled")">@(a.IsAvailable ? "Available" : "Unavailable")</span></td>
+                        <td style="padding:13px 16px;text-align:right;white-space:nowrap">
+                            <a href="@Url.Action("EditAccommodation", "Admin", new { id = a.Id })" class="btn btn-ghost" style="padding:6px 12px;font-size:12px">Edit</a>
+                            @using (Html.BeginForm("DeleteAccommodation", "Admin", FormMethod.Post, new { style = "display:inline;margin-left:6px", onsubmit = "return confirm('Delete this listing?')" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@a.Id" />
+                                <button type="submit" class="btn btn-ghost" style="padding:6px 12px;font-size:12px">Delete</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

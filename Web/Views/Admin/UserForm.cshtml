@@ -1,0 +1,54 @@
+@model Web.Models.ViewModels.AdminUserFormViewModel
+@{
+    var isCreate = ViewBag.IsCreate == true;
+    ViewBag.Title = isCreate ? "Add host" : "Edit user";
+    var action = isCreate ? "CreateHost" : "EditUser";
+}
+
+<div class="wrap" style="padding:40px 0 64px;max-width:640px">
+    <a href="@Url.Action("Users", "Admin")" class="muted" style="font-size:13px">&larr; Back to users</a>
+    <h1 class="serif" style="font-size:38px;margin:14px 0 24px">@ViewBag.Title</h1>
+
+    <div style="border:1px solid var(--border);border-radius:16px;padding:32px;background:var(--surface-2)">
+        @using (Html.BeginForm(action, "Admin", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.Role)
+            @Html.ValidationSummary(false, "", new { @class = "alert" })
+
+            <div class="form-row">
+                <div class="field"><label>First name</label>@Html.TextBoxFor(m => m.FirstName) @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "val" })</div>
+                <div class="field"><label>Last name</label>@Html.TextBoxFor(m => m.LastName) @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "val" })</div>
+            </div>
+
+            <div class="field">
+                <label>Username</label>
+                @if (isCreate)
+                {
+                    @Html.TextBoxFor(m => m.Username)
+                    @Html.ValidationMessageFor(m => m.Username, "", new { @class = "val" })
+                }
+                else
+                {
+                    @Html.TextBoxFor(m => m.Username, new { @readonly = "readonly", style = "opacity:.6" })
+                }
+            </div>
+
+            <div class="field"><label>Email</label>@Html.TextBoxFor(m => m.Email, new { type = "email" }) @Html.ValidationMessageFor(m => m.Email, "", new { @class = "val" })</div>
+
+            <div class="form-row">
+                <div class="field"><label>Date of birth</label>@Html.TextBoxFor(m => m.DateOfBirth, new { type = "date" }) @Html.ValidationMessageFor(m => m.DateOfBirth, "", new { @class = "val" })</div>
+                <div class="field"><label>Gender</label>@Html.DropDownListFor(m => m.Gender, new SelectList(System.Enum.GetValues(typeof(Web.Models.Gender)))) </div>
+            </div>
+
+            <div class="field">
+                <label>@(isCreate ? "Password" : "New password (leave blank to keep current)")</label>
+                @Html.PasswordFor(m => m.Password, new { placeholder = "••••••••" })
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "val" })
+            </div>
+
+            <button type="submit" class="btn btn-gold" style="margin-top:8px">@(isCreate ? "Add host" : "Save changes")</button>
+        }
+    </div>
+</div>

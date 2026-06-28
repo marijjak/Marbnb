@@ -212,7 +212,8 @@
     <Content Include="Views\Admin\Reservations.cshtml" />
     <Content Include="Views\Admin\Reviews.cshtml" />
     <Content Include="Content\marbnb.css" />
-    <Content Include="Content\img\hero.jpg" />
+    <Content Include="Content\img\*.png" />
+    <Content Include="Content\img\*.jpg" />
     <Content Include="Content\img\moskva_1.png" />
     <Content Include="Content\img\moskva_2.png" />
     <Content Include="Content\img\moskva_3.png" />

@@ -125,6 +125,8 @@ namespace Web.Controllers
             user.Email = model.Email;
             user.DateOfBirth = model.DateOfBirth ?? user.DateOfBirth;
             user.Gender = model.Gender;
+            if (model.Role == UserRole.Guest || model.Role == UserRole.Host)
+                user.Role = model.Role;
             if (!string.IsNullOrEmpty(model.Password))
                 user.Password = model.Password;
 

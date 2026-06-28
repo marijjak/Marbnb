@@ -17,7 +17,10 @@
             <p class="hero__sub">Handpicked stays for those who expect a little more from a night away.</p>
             <div class="hero__cta">
                 <a href="#featured" class="btn btn-gold">Explore stays &rarr;</a>
-                <a href="@Url.Action("Register", "Account")" class="btn btn-ghost">Become a member</a>
+                @if (Session["username"] == null)
+                {
+                    <a href="@Url.Action("Register", "Account")" class="btn btn-ghost">Become a member</a>
+                }
             </div>
         </div>
     </div>

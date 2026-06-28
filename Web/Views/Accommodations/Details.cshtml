@@ -18,7 +18,7 @@
         <div style="text-align:right">
             @if (Model.AverageRating > 0)
             {
-                <div class="gold serif" style="font-size:30px">★ @Model.AverageRating.ToString("0.0")</div>
+                <div class="gold serif" style="font-size:30px">&#9733; @Model.AverageRating.ToString("0.0")</div>
                 <div class="muted" style="font-size:12px">@Model.Reviews.Count review@(Model.Reviews.Count == 1 ? "" : "s")</div>
             }
             else
@@ -28,12 +28,30 @@
         </div>
     </div>
 
-    <div class="stay__img" style="height:360px;border-radius:16px;@(string.IsNullOrEmpty(Model.ImagePath) ? "" : "background-image:url(" + Url.Content(Model.ImagePath) + ")")">
-        @if (string.IsNullOrEmpty(Model.ImagePath))
+    @{
+        var gallery = (Model.Images != null && Model.Images.Any())
+            ? Model.Images
+            : (string.IsNullOrEmpty(Model.ImagePath) ? new System.Collections.Generic.List<string>() : new System.Collections.Generic.List<string> { Model.ImagePath });
+    }
+    @if (gallery.Any())
+    {
+        <img id="mainImg" src="@Url.Content(gallery[0])" alt="@Model.Name" style="width:100%;height:430px;object-fit:cover;border-radius:16px" />
+        if (gallery.Count > 1)
         {
-            <span style="font-family:'Cormorant Garamond',serif;font-size:120px;color:rgba(201,163,94,.18)">@Model.Name.Substring(0, 1)</span>
+            <div style="display:grid;grid-template-columns:repeat(@(System.Math.Min(gallery.Count, 6)),1fr);gap:10px;margin-top:10px">
+                @foreach (var img in gallery)
+                {
+                    <img src="@Url.Content(img)" alt="" onclick="document.getElementById('mainImg').src=this.src" style="width:100%;height:92px;object-fit:cover;border-radius:10px;cursor:pointer;border:1px solid var(--border)" />
+                }
+            </div>
         }
-    </div>
+    }
+    else
+    {
+        <div class="stay__img" style="height:360px;border-radius:16px">
+            <span style="font-family:'Cormorant Garamond',serif;font-size:120px;color:rgba(201,163,94,.18)">@Model.Name.Substring(0, 1)</span>
+        </div>
+    }
 
     <div style="display:grid;grid-template-columns:1.7fr 1fr;gap:40px;margin-top:36px">
         <div>

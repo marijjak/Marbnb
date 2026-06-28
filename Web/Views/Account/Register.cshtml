@@ -52,7 +52,7 @@
                     </div>
                     <div class="field">
                         <label>Last name</label>
-                        @Html.TextBoxFor(m => m.LastName, new { placeholder = "Marković" })
+                        @Html.TextBoxFor(m => m.LastName, new { placeholder = "Markovic" })
                         @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "val" })
                     </div>
                 </div>
@@ -72,12 +72,12 @@
                 <div class="form-row">
                     <div class="field">
                         <label>Password</label>
-                        @Html.PasswordFor(m => m.Password, new { placeholder = "••••••••" })
+                        @Html.PasswordFor(m => m.Password)
                         @Html.ValidationMessageFor(m => m.Password, "", new { @class = "val" })
                     </div>
                     <div class="field">
                         <label>Confirm password</label>
-                        @Html.PasswordFor(m => m.ConfirmPassword, new { placeholder = "••••••••" })
+                        @Html.PasswordFor(m => m.ConfirmPassword)
                         @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "val" })
                     </div>
                 </div>

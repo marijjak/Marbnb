@@ -47,7 +47,7 @@
 
             <div class="field">
                 <label>New password (leave blank to keep current)</label>
-                @Html.PasswordFor(m => m.NewPassword, new { placeholder = "••••••••" })
+                @Html.PasswordFor(m => m.NewPassword)
                 @Html.ValidationMessageFor(m => m.NewPassword, "", new { @class = "val" })
             </div>
 

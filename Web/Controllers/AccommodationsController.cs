@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -52,13 +53,14 @@ namespace Web.Controllers
         [RoleAuthorize("Host")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(AccommodationFormViewModel model, HttpPostedFileBase image)
+        public ActionResult Create(AccommodationFormViewModel model, IEnumerable<HttpPostedFileBase> images)
         {
-            if (!FileUpload.IsValidImage(image))
-                ModelState.AddModelError("", "An image of the property is required.");
+            if (images == null || !images.Any(FileUpload.IsValidImage))
+                ModelState.AddModelError("", "At least one image of the property is required.");
             if (!ModelState.IsValid)
                 return View("Form", model);
 
+            var saved = FileUpload.SaveMany(images, "accommodations");
             Database.Accommodations.Add(new Accommodation
             {
                 Name = model.Name,
@@ -71,7 +73,8 @@ namespace Web.Controllers
                 IsAvailable = model.IsAvailable,
                 HostUsername = Me,
                 DatePosted = DateTime.Today,
-                ImagePath = FileUpload.Save(image, "accommodations")
+                ImagePath = saved[0],
+                Images = saved
             });
 
             TempData["ok"] = "Listing created.";
@@ -108,7 +111,7 @@ namespace Web.Controllers
         [RoleAuthorize("Host")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(AccommodationFormViewModel model, HttpPostedFileBase image)
+        public ActionResult Edit(AccommodationFormViewModel model, IEnumerable<HttpPostedFileBase> images)
         {
             var acc = Database.Accommodations.GetById(model.Id);
             if (acc == null || acc.HostUsername != Me)
@@ -129,9 +132,12 @@ namespace Web.Controllers
             acc.PricePerNight = model.PricePerNight;
             acc.MaxGuests = model.MaxGuests;
             acc.IsAvailable = model.IsAvailable;
-            var newImage = FileUpload.Save(image, "accommodations");
-            if (newImage != null)
-                acc.ImagePath = newImage;
+            var newImages = FileUpload.SaveMany(images, "accommodations");
+            if (newImages.Any())
+            {
+                acc.Images = newImages;
+                acc.ImagePath = newImages[0];
+            }
 
             Database.Accommodations.Update(acc);
             TempData["ok"] = "Listing updated.";

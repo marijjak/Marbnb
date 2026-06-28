@@ -111,23 +111,33 @@ namespace Web.Data
             Users.Add(new User { Username = "nikola", Password = "nikola123", FirstName = "Nikola", LastName = "Jovanović", Email = "nikola@gmail.com", DateOfBirth = new DateTime(1995, 11, 8), Gender = Gender.Male, Role = UserRole.Guest });
             Users.Add(new User { Username = "milica", Password = "milica123", FirstName = "Milica", LastName = "Kovač", Email = "milica@gmail.com", DateOfBirth = new DateTime(1999, 7, 14), Gender = Gender.Female, Role = UserRole.Guest });
 
-            var a1 = Accommodations.Add(new Accommodation { Name = "The Loft, Old Town", Type = AccommodationType.Apartment, Description = "Bright top-floor loft in the heart of the old town.", Address = "Zmaj Jovina 14", City = "Novi Sad", PricePerNight = 48m, MaxGuests = 4, ImagePath = null, DatePosted = today.AddDays(-60), IsAvailable = true, HostUsername = "marko" });
-            var a2 = Accommodations.Add(new Accommodation { Name = "Villa Tara", Type = AccommodationType.Villa, Description = "Secluded villa with a view over the Tara canyon.", Address = "Kaluđerske Bare bb", City = "Bajina Bašta", PricePerNight = 82m, MaxGuests = 8, ImagePath = null, DatePosted = today.AddDays(-45), IsAvailable = true, HostUsername = "jovana" });
-            var a3 = Accommodations.Add(new Accommodation { Name = "Hôtel Moskva Suite", Type = AccommodationType.Hotel, Description = "Elegant suite in a landmark hotel.", Address = "Balkanska 1", City = "Belgrade", PricePerNight = 110m, MaxGuests = 2, ImagePath = null, DatePosted = today.AddDays(-30), IsAvailable = true, HostUsername = "marko" });
-            var a4 = Accommodations.Add(new Accommodation { Name = "Riverside Studio", Type = AccommodationType.Studio, Description = "Cozy studio steps from the Danube.", Address = "Beogradski kej 5", City = "Novi Sad", PricePerNight = 35m, MaxGuests = 2, ImagePath = null, DatePosted = today.AddDays(-20), IsAvailable = true, HostUsername = "jovana" });
-            var a5 = Accommodations.Add(new Accommodation { Name = "Mountain Cottage", Type = AccommodationType.Cottage, Description = "Wooden cottage surrounded by pine forest.", Address = "Tornik 22", City = "Zlatibor", PricePerNight = 60m, MaxGuests = 6, ImagePath = null, DatePosted = today.AddDays(-15), IsAvailable = true, HostUsername = "marko" });
-            var a6 = Accommodations.Add(new Accommodation { Name = "City Hostel", Type = AccommodationType.Hostel, Description = "Budget-friendly beds in central Belgrade.", Address = "Cara Dušana 9", City = "Belgrade", PricePerNight = 18m, MaxGuests = 3, ImagePath = null, DatePosted = today.AddDays(-10), IsAvailable = false, HostUsername = "jovana" });
+            var a1 = Accommodations.Add(new Accommodation { Name = "Hotel Moskva", Type = AccommodationType.Hotel, Description = "An icon of Belgrade — elegant rooms in the landmark Art-Nouveau hotel on Terazije.", Address = "Terazije 20", City = "Belgrade", PricePerNight = 120m, MaxGuests = 2, ImagePath = "~/Content/img/moskva_1.png", Images = G("moskva", 3), DatePosted = today.AddDays(-60), IsAvailable = true, HostUsername = "marko" });
+            var a2 = Accommodations.Add(new Accommodation { Name = "Hotel Pupin", Type = AccommodationType.Hotel, Description = "Modern hotel with sleek rooms and skyline views in the heart of Novi Sad.", Address = "Bulevar Mihajla Pupina 6", City = "Novi Sad", PricePerNight = 85m, MaxGuests = 3, ImagePath = "~/Content/img/pupin_1.png", Images = G("pupin", 4), DatePosted = today.AddDays(-52), IsAvailable = true, HostUsername = "jovana" });
+            var a3 = Accommodations.Add(new Accommodation { Name = "Tara Wooden House", Type = AccommodationType.Cottage, Description = "Hand-built wooden house tucked into the pine forest of the Tara mountain.", Address = "Kaluđerske Bare bb", City = "Bajina Bašta", PricePerNight = 78m, MaxGuests = 6, ImagePath = "~/Content/img/tara_1.png", Images = G("tara", 4), DatePosted = today.AddDays(-45), IsAvailable = true, HostUsername = "marko" });
+            var a4 = Accommodations.Add(new Accommodation { Name = "Zlatibor Chalet", Type = AccommodationType.Cottage, Description = "Cosy alpine chalet on Zlatibor with a wooden terrace and clean mountain air.", Address = "Naselje Kraljev Trg 4", City = "Zlatibor", PricePerNight = 65m, MaxGuests = 5, ImagePath = "~/Content/img/zlatibor_1.png", Images = G("zlatibor", 2), DatePosted = today.AddDays(-38), IsAvailable = true, HostUsername = "jovana" });
+            var a5 = Accommodations.Add(new Accommodation { Name = "Kopaonik Lux Apartment", Type = AccommodationType.Apartment, Description = "Stylish ski-resort apartment just steps from the Kopaonik slopes.", Address = "Suvo Rudište bb", City = "Kopaonik", PricePerNight = 110m, MaxGuests = 4, ImagePath = "~/Content/img/kopaonik_1.png", Images = G("kopaonik", 3), DatePosted = today.AddDays(-30), IsAvailable = true, HostUsername = "marko" });
+            var a6 = Accommodations.Add(new Accommodation { Name = "Petrovaradin Studio", Type = AccommodationType.Studio, Description = "Warm studio beneath the Petrovaradin fortress, a short walk from the centre.", Address = "Štrosmajerova 7", City = "Novi Sad", PricePerNight = 45m, MaxGuests = 2, ImagePath = "~/Content/img/petrovaradin_1.png", Images = G("petrovaradin", 2), DatePosted = today.AddDays(-22), IsAvailable = true, HostUsername = "jovana" });
+            var a7 = Accommodations.Add(new Accommodation { Name = "Centar Apartment", Type = AccommodationType.Apartment, Description = "Bright, modern apartment in the very centre of Novi Sad.", Address = "Zmaj Jovina 14", City = "Novi Sad", PricePerNight = 55m, MaxGuests = 4, ImagePath = "~/Content/img/novisad_1.png", Images = G("novisad", 3), DatePosted = today.AddDays(-16), IsAvailable = true, HostUsername = "marko" });
+            var a8 = Accommodations.Add(new Accommodation { Name = "Skadarlija Apartment", Type = AccommodationType.Apartment, Description = "Charming apartment on Belgrade's bohemian cobbled street of Skadarlija.", Address = "Skadarska 29", City = "Belgrade", PricePerNight = 60m, MaxGuests = 3, ImagePath = "~/Content/img/beograd_1.png", Images = G("beograd", 2), DatePosted = today.AddDays(-10), IsAvailable = true, HostUsername = "jovana" });
 
             AddReservation("ana", a1, today.AddDays(-20), today.AddDays(-17), 2, ReservationStatus.Completed);
-            AddReservation("nikola", a2, today.AddDays(10), today.AddDays(14), 5, ReservationStatus.Approved);
-            AddReservation("milica", a3, today.AddDays(20), today.AddDays(22), 2, ReservationStatus.Created);
-            AddReservation("ana", a5, today.AddDays(5), today.AddDays(8), 4, ReservationStatus.Cancelled);
-            AddReservation("nikola", a1, today.AddDays(-40), today.AddDays(-37), 3, ReservationStatus.Completed);
-            AddReservation("milica", a2, today.AddDays(-30), today.AddDays(-25), 4, ReservationStatus.Completed);
+            AddReservation("nikola", a2, today.AddDays(10), today.AddDays(14), 2, ReservationStatus.Approved);
+            AddReservation("milica", a5, today.AddDays(20), today.AddDays(22), 3, ReservationStatus.Created);
+            AddReservation("ana", a4, today.AddDays(5), today.AddDays(8), 4, ReservationStatus.Cancelled);
+            AddReservation("nikola", a1, today.AddDays(-40), today.AddDays(-37), 2, ReservationStatus.Completed);
+            AddReservation("milica", a3, today.AddDays(-30), today.AddDays(-25), 4, ReservationStatus.Completed);
 
-            Reviews.Add(new Review { AccommodationId = a1.Id, ReviewerUsername = "ana", Title = "Stunning city loft", Content = "Spotless, stylish and perfectly located. Would book again.", Rating = 5, Status = ReviewStatus.Approved, CreatedAt = today.AddDays(-16) });
-            Reviews.Add(new Review { AccommodationId = a1.Id, ReviewerUsername = "nikola", Title = "Great location", Content = "Comfortable bed and amazing view, a bit noisy at night.", Rating = 4, Status = ReviewStatus.Created, CreatedAt = today.AddDays(-36) });
-            Reviews.Add(new Review { AccommodationId = a2.Id, ReviewerUsername = "milica", Title = "Not for me", Content = "Hard to reach without a car.", Rating = 2, Status = ReviewStatus.Rejected, CreatedAt = today.AddDays(-24) });
+            Reviews.Add(new Review { AccommodationId = a1.Id, ReviewerUsername = "ana", Title = "An unforgettable stay", Content = "Spotless, elegant and perfectly located. We would book the Moskva again in a heartbeat.", Rating = 5, Status = ReviewStatus.Approved, CreatedAt = today.AddDays(-16) });
+            Reviews.Add(new Review { AccommodationId = a1.Id, ReviewerUsername = "nikola", Title = "Great location", Content = "Comfortable bed and a wonderful view, a little noisy at night.", Rating = 4, Status = ReviewStatus.Created, CreatedAt = today.AddDays(-36) });
+            Reviews.Add(new Review { AccommodationId = a3.Id, ReviewerUsername = "milica", Title = "Not for me", Content = "Beautiful but hard to reach without a car.", Rating = 2, Status = ReviewStatus.Rejected, CreatedAt = today.AddDays(-24) });
+        }
+
+        private static System.Collections.Generic.List<string> G(string key, int count)
+        {
+            var list = new System.Collections.Generic.List<string>();
+            for (int i = 1; i <= count; i++)
+                list.Add($"~/Content/img/{key}_{i}.png");
+            return list;
         }
 
         private static void AddReservation(string guest, Accommodation acc, DateTime checkIn, DateTime checkOut, int guests, ReservationStatus status)

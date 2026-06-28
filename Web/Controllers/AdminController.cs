@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -207,7 +208,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditAccommodation(AccommodationFormViewModel model, HttpPostedFileBase image)
+        public ActionResult EditAccommodation(AccommodationFormViewModel model, IEnumerable<HttpPostedFileBase> images)
         {
             var acc = Database.Accommodations.GetById(model.Id);
             if (acc == null)
@@ -223,9 +224,12 @@ namespace Web.Controllers
             acc.PricePerNight = model.PricePerNight;
             acc.MaxGuests = model.MaxGuests;
             acc.IsAvailable = model.IsAvailable;
-            var newImage = FileUpload.Save(image, "accommodations");
-            if (newImage != null)
-                acc.ImagePath = newImage;
+            var newImages = FileUpload.SaveMany(images, "accommodations");
+            if (newImages.Any())
+            {
+                acc.Images = newImages;
+                acc.ImagePath = newImages[0];
+            }
 
             Database.Accommodations.Update(acc);
             TempData["ok"] = "Listing updated.";

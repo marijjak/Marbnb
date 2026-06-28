@@ -18,6 +18,20 @@ namespace Web.Infrastructure
             return ext != null && Allowed.Contains(ext.ToLowerInvariant());
         }
 
+        public static System.Collections.Generic.List<string> SaveMany(System.Collections.Generic.IEnumerable<HttpPostedFileBase> files, string subfolder)
+        {
+            var saved = new System.Collections.Generic.List<string>();
+            if (files == null)
+                return saved;
+            foreach (var file in files)
+            {
+                var path = Save(file, subfolder);
+                if (path != null)
+                    saved.Add(path);
+            }
+            return saved;
+        }
+
         public static string Save(HttpPostedFileBase file, string subfolder)
         {
             if (!IsValidImage(file))

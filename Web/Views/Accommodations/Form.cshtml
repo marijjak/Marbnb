@@ -60,17 +60,14 @@
             </div>
 
             <div class="field">
-                <label>@(isEdit ? "Replace photo (optional)" : "Property photo (required)")</label>
-                <input type="file" name="image" accept="image/*" />
-                @if (isEdit)
-                {
-                    <span class="muted" style="font-size:12px;display:block;margin-top:6px">Leave empty to keep the current photo.</span>
-                }
+                <label>@(isEdit ? "Replace photos (optional)" : "Property photos (required)")</label>
+                <input type="file" name="images" accept="image/*" multiple />
+                <span class="muted" style="font-size:12px;display:block;margin-top:6px">@(isEdit ? "Select new photos to replace the gallery, or leave empty to keep current." : "You can select several photos at once.")</span>
             </div>
 
             <label style="display:flex;align-items:center;gap:10px;margin:6px 0 20px;cursor:pointer">
                 @Html.CheckBoxFor(m => m.IsAvailable, new { style = "width:auto" })
-                <span style="font-size:14px">Available — visible to guests on the home page</span>
+                <span style="font-size:14px">Available - visible to guests on the home page</span>
             </label>
 
             <button type="submit" class="btn btn-gold">@(isEdit ? "Save changes" : "Create listing")</button>

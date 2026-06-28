@@ -28,10 +28,10 @@
             <select name="sort" onchange="this.form.submit()" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 12px;font-size:12.5px">
                 <option value="date_desc" @(fsort == "date_desc" ? "selected" : null)>Newest</option>
                 <option value="date_asc" @(fsort == "date_asc" ? "selected" : null)>Oldest</option>
-                <option value="price_asc" @(fsort == "price_asc" ? "selected" : null)>Price ↑</option>
-                <option value="price_desc" @(fsort == "price_desc" ? "selected" : null)>Price ↓</option>
-                <option value="name_asc" @(fsort == "name_asc" ? "selected" : null)>Name A–Z</option>
-                <option value="name_desc" @(fsort == "name_desc" ? "selected" : null)>Name Z–A</option>
+                <option value="price_asc" @(fsort == "price_asc" ? "selected" : null)>Price: low to high</option>
+                <option value="price_desc" @(fsort == "price_desc" ? "selected" : null)>Price: high to low</option>
+                <option value="name_asc" @(fsort == "name_asc" ? "selected" : null)>Name A-Z</option>
+                <option value="name_desc" @(fsort == "name_desc" ? "selected" : null)>Name Z-A</option>
             </select>
         }
     </div>

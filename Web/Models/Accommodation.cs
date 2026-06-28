@@ -14,6 +14,7 @@ namespace Web.Models
         public decimal PricePerNight { get; set; }
         public int MaxGuests { get; set; }
         public string ImagePath { get; set; }
+        public List<string> Images { get; set; } = new List<string>();
         public DateTime DatePosted { get; set; }
         public bool IsAvailable { get; set; } = true;
         public string HostUsername { get; set; }

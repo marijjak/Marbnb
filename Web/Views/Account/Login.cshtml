@@ -52,7 +52,7 @@
 
                 <div class="field">
                     <label>Password</label>
-                    @Html.PasswordFor(m => m.Password, new { placeholder = "••••••••" })
+                    @Html.PasswordFor(m => m.Password)
                     @Html.ValidationMessageFor(m => m.Password, "", new { @class = "val" })
                 </div>
 

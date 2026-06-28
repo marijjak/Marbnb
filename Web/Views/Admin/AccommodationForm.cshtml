@@ -30,13 +30,14 @@
             </div>
 
             <div class="field">
-                <label>Replace photo (optional)</label>
-                <input type="file" name="image" accept="image/*" />
+                <label>Replace photos (optional)</label>
+                <input type="file" name="images" accept="image/*" multiple />
+                <span class="muted" style="font-size:12px;display:block;margin-top:6px">Select new photos to replace the gallery, or leave empty to keep current.</span>
             </div>
 
             <label style="display:flex;align-items:center;gap:10px;margin:6px 0 20px;cursor:pointer">
                 @Html.CheckBoxFor(m => m.IsAvailable, new { style = "width:auto" })
-                <span style="font-size:14px">Available — visible to guests on the home page</span>
+                <span style="font-size:14px">Available - visible to guests on the home page</span>
             </label>
 
             <button type="submit" class="btn btn-gold">Save changes</button>

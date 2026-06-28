@@ -6,6 +6,9 @@
     var statusFilter = (string)ViewBag.StatusFilter;
     var myReviews = ViewBag.MyReviews as System.Collections.Generic.Dictionary<int, Web.Models.Review>;
     var statuses = new[] { "", "Created", "Approved", "Completed", "Cancelled" };
+    var listings = ViewBag.Listings as System.Collections.Generic.List<Web.Models.Accommodation>;
+    var availability = (string)ViewBag.Availability;
+    var hostSort = (string)ViewBag.Sort ?? "date_desc";
 }
 
 <div class="wrap" style="padding:40px 0 64px">
@@ -23,6 +26,91 @@
         <div><div class="muted" style="font-size:12px">Date of birth</div><div style="margin-top:3px">@Model.DateOfBirth.ToString("dd/MM/yyyy")</div></div>
         <div><div class="muted" style="font-size:12px">Gender</div><div style="margin-top:3px">@Model.Gender</div></div>
     </div>
+
+    @if (Model.Role == Web.Models.UserRole.Host)
+    {
+        <div style="margin-top:44px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+                <h2 class="serif" style="font-size:30px">My listings</h2>
+                <a href="@Url.Action("Create", "Accommodations")" class="btn btn-gold">+ Add listing</a>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                    @foreach (var a in new[] { new { v = "", t = "All" }, new { v = "available", t = "Available" }, new { v = "unavailable", t = "Unavailable" } })
+                    {
+                        var act = (availability ?? "") == a.v;
+                        <a href="@Url.Action("Index", "Profile", new { availability = a.v, sort = hostSort })"
+                           class="btn @(act ? "btn-gold" : "btn-ghost")" style="padding:8px 16px;font-size:12.5px">@a.t</a>
+                    }
+                </div>
+                @using (Html.BeginForm("Index", "Profile", FormMethod.Get))
+                {
+                    <input type="hidden" name="availability" value="@availability" />
+                    <select name="sort" onchange="this.form.submit()" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 12px;font-size:12.5px">
+                        <option value="date_desc" @(hostSort == "date_desc" ? "selected" : null)>Newest</option>
+                        <option value="date_asc" @(hostSort == "date_asc" ? "selected" : null)>Oldest</option>
+                        <option value="price_asc" @(hostSort == "price_asc" ? "selected" : null)>Price: low to high</option>
+                        <option value="price_desc" @(hostSort == "price_desc" ? "selected" : null)>Price: high to low</option>
+                        <option value="name_asc" @(hostSort == "name_asc" ? "selected" : null)>Name: A to Z</option>
+                        <option value="name_desc" @(hostSort == "name_desc" ? "selected" : null)>Name: Z to A</option>
+                    </select>
+                }
+            </div>
+
+            @if (listings == null || !listings.Any())
+            {
+                <p class="muted">No listings yet. <a href="@Url.Action("Create", "Accommodations")" class="gold">Add your first one</a>.</p>
+            }
+            else
+            {
+                <div style="border:1px solid var(--border);border-radius:14px;overflow:hidden">
+                    <table style="width:100%;border-collapse:collapse;font-size:14px">
+                        <thead>
+                            <tr style="background:var(--surface);color:var(--text-muted);font-size:12px;text-align:left">
+                                <th style="padding:14px 16px">Name</th>
+                                <th style="padding:14px 16px">Type</th>
+                                <th style="padding:14px 16px">City</th>
+                                <th style="padding:14px 16px">Price</th>
+                                <th style="padding:14px 16px">Status</th>
+                                <th style="padding:14px 16px"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var a in listings)
+                            {
+                                <tr style="border-top:1px solid var(--border-2)">
+                                    <td style="padding:14px 16px"><a href="@Url.Action("Details", "Accommodations", new { id = a.Id })" class="gold">@a.Name</a></td>
+                                    <td style="padding:14px 16px">@a.Type</td>
+                                    <td style="padding:14px 16px">@a.City</td>
+                                    <td style="padding:14px 16px">&euro;@a.PricePerNight.ToString("0")</td>
+                                    <td style="padding:14px 16px">
+                                        <span class="badge @(a.IsAvailable ? "badge-approved" : "badge-cancelled")">@(a.IsAvailable ? "Available" : "Unavailable")</span>
+                                    </td>
+                                    <td style="padding:14px 16px;text-align:right;white-space:nowrap">
+                                        @if (a.IsAvailable)
+                                        {
+                                            <a href="@Url.Action("Edit", "Accommodations", new { id = a.Id })" class="btn btn-ghost" style="padding:7px 14px;font-size:12px">Edit</a>
+                                            using (Html.BeginForm("Delete", "Accommodations", FormMethod.Post, new { style = "display:inline;margin-left:6px", onsubmit = "return confirm('Delete this listing?')" }))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@a.Id" />
+                                                <button type="submit" class="btn btn-ghost" style="padding:7px 14px;font-size:12px">Delete</button>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="muted" style="font-size:12px">Locked</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    }
 
     @if (Model.Role == Web.Models.UserRole.Guest)
     {

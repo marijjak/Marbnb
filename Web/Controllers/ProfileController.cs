@@ -13,11 +13,35 @@ namespace Web.Controllers
     {
         private string CurrentUsername => Session["username"] as string;
 
-        public ActionResult Index(string status)
+        public ActionResult Index(string status, string availability, string sort)
         {
             var user = Database.FindByUsername(CurrentUsername);
             if (user == null)
                 return RedirectToAction("Login", "Account");
+
+            if (user.Role == UserRole.Host)
+            {
+                var listings = Database.Accommodations.GetAll().Where(a => a.HostUsername == user.Username);
+
+                if (availability == "available")
+                    listings = listings.Where(a => a.IsAvailable);
+                else if (availability == "unavailable")
+                    listings = listings.Where(a => !a.IsAvailable);
+
+                switch (sort)
+                {
+                    case "name_asc": listings = listings.OrderBy(a => a.Name); break;
+                    case "name_desc": listings = listings.OrderByDescending(a => a.Name); break;
+                    case "price_asc": listings = listings.OrderBy(a => a.PricePerNight); break;
+                    case "price_desc": listings = listings.OrderByDescending(a => a.PricePerNight); break;
+                    case "date_asc": listings = listings.OrderBy(a => a.DatePosted); break;
+                    default: listings = listings.OrderByDescending(a => a.DatePosted); break;
+                }
+
+                ViewBag.Listings = listings.ToList();
+                ViewBag.Availability = availability;
+                ViewBag.Sort = sort;
+            }
 
             if (user.Role == UserRole.Guest)
             {

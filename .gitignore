@@ -67,3 +67,9 @@ _ReSharper*/
 *.pubxml
 *.publishproj
 PublishScripts/
+
+Web/App_Data/users.json
+Web/App_Data/accommodations.json
+Web/App_Data/reservations.json
+Web/App_Data/reviews.json
+Web/App_Data/uploads/

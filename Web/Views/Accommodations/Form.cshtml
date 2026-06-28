@@ -1,0 +1,79 @@
+@model Web.Models.ViewModels.AccommodationFormViewModel
+@{
+    var isEdit = Model.Id > 0;
+    ViewBag.Title = isEdit ? "Edit listing" : "New listing";
+    var action = isEdit ? "Edit" : "Create";
+}
+
+<div class="wrap" style="padding:40px 0 64px;max-width:720px">
+    <a href="@Url.Action("Index", "Profile")" class="muted" style="font-size:13px">&larr; Back to my listings</a>
+    <h1 class="serif" style="font-size:38px;margin:14px 0 24px">@ViewBag.Title</h1>
+
+    <div style="border:1px solid var(--border);border-radius:16px;padding:32px;background:var(--surface-2)">
+        @using (Html.BeginForm(action, "Accommodations", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
+            @Html.ValidationSummary(false, "", new { @class = "alert" })
+
+            <div class="field">
+                <label>Name</label>
+                @Html.TextBoxFor(m => m.Name, new { placeholder = "The Loft, Old Town" })
+                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val" })
+            </div>
+
+            <div class="form-row">
+                <div class="field">
+                    <label>Type</label>
+                    @Html.DropDownListFor(m => m.Type, new SelectList(System.Enum.GetValues(typeof(Web.Models.AccommodationType)), Model.Type))
+                </div>
+                <div class="field">
+                    <label>City</label>
+                    @Html.TextBoxFor(m => m.City, new { placeholder = "Novi Sad" })
+                    @Html.ValidationMessageFor(m => m.City, "", new { @class = "val" })
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Address</label>
+                @Html.TextBoxFor(m => m.Address, new { placeholder = "Zmaj Jovina 14" })
+                @Html.ValidationMessageFor(m => m.Address, "", new { @class = "val" })
+            </div>
+
+            <div class="field">
+                <label>Description</label>
+                @Html.TextAreaFor(m => m.Description, new { rows = "4", placeholder = "What makes this stay special?" })
+                @Html.ValidationMessageFor(m => m.Description, "", new { @class = "val" })
+            </div>
+
+            <div class="form-row">
+                <div class="field">
+                    <label>Price per night (&euro;)</label>
+                    @Html.TextBoxFor(m => m.PricePerNight, new { type = "number", step = "0.01", min = "1" })
+                    @Html.ValidationMessageFor(m => m.PricePerNight, "", new { @class = "val" })
+                </div>
+                <div class="field">
+                    <label>Max guests</label>
+                    @Html.TextBoxFor(m => m.MaxGuests, new { type = "number", min = "1" })
+                    @Html.ValidationMessageFor(m => m.MaxGuests, "", new { @class = "val" })
+                </div>
+            </div>
+
+            <div class="field">
+                <label>@(isEdit ? "Replace photo (optional)" : "Property photo (required)")</label>
+                <input type="file" name="image" accept="image/*" />
+                @if (isEdit)
+                {
+                    <span class="muted" style="font-size:12px;display:block;margin-top:6px">Leave empty to keep the current photo.</span>
+                }
+            </div>
+
+            <label style="display:flex;align-items:center;gap:10px;margin:6px 0 20px;cursor:pointer">
+                @Html.CheckBoxFor(m => m.IsAvailable, new { style = "width:auto" })
+                <span style="font-size:14px">Available — visible to guests on the home page</span>
+            </label>
+
+            <button type="submit" class="btn btn-gold">@(isEdit ? "Save changes" : "Create listing")</button>
+        }
+    </div>
+</div>

@@ -15,6 +15,7 @@ namespace Web.Controllers
 
         public ActionResult Index(string status, string availability, string sort)
         {
+            Database.CompletePastReservations();
             var user = Database.FindByUsername(CurrentUsername);
             if (user == null)
                 return RedirectToAction("Login", "Account");

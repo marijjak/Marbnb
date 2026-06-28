@@ -259,6 +259,7 @@ namespace Web.Controllers
 
         public ActionResult Reservations()
         {
+            Database.CompletePastReservations();
             ViewBag.AccNames = Database.Accommodations.GetAll(true).ToDictionary(a => a.Id, a => a.Name);
             return View(Database.Reservations.GetAll().OrderByDescending(r => r.CheckIn).ToList());
         }

@@ -46,6 +46,9 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Register(RegisterViewModel model)
         {
+            if (model.DateOfBirth.HasValue && model.DateOfBirth.Value.Date > DateTime.Today)
+                ModelState.AddModelError("DateOfBirth", "Date of birth can't be in the future.");
+
             if (!ModelState.IsValid)
                 return View(model);
 

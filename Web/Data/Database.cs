@@ -33,6 +33,30 @@ namespace Web.Data
 
             if (Users.IsEmpty() && Accommodations.IsEmpty())
                 Seed();
+
+            CompletePastReservations();
+        }
+
+        public static void CompletePastReservations()
+        {
+            if (Reservations == null)
+                return;
+
+            var all = Reservations.GetAll(true);
+            var today = DateTime.Today;
+            bool changed = false;
+
+            foreach (var r in all)
+            {
+                if (!r.IsDeleted && r.Status == ReservationStatus.Approved && r.CheckOut < today)
+                {
+                    r.Status = ReservationStatus.Completed;
+                    changed = true;
+                }
+            }
+
+            if (changed)
+                Reservations.SaveAll(all);
         }
 
         private static void LoadAdmins()

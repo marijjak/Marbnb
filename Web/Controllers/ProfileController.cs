@@ -30,6 +30,10 @@ namespace Web.Controllers
                 ViewBag.Reservations = reservations.OrderByDescending(r => r.CheckIn).ToList();
                 ViewBag.AccNames = Database.Accommodations.GetAll(true).ToDictionary(a => a.Id, a => a.Name);
                 ViewBag.StatusFilter = status;
+                ViewBag.MyReviews = Database.Reviews.GetAll()
+                    .Where(r => r.ReviewerUsername == user.Username)
+                    .GroupBy(r => r.AccommodationId)
+                    .ToDictionary(g => g.Key, g => g.First());
             }
 
             return View(user);

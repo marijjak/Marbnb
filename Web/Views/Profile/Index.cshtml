@@ -4,6 +4,7 @@
     var reservations = ViewBag.Reservations as System.Collections.Generic.List<Web.Models.Reservation>;
     var accNames = ViewBag.AccNames as System.Collections.Generic.Dictionary<int, string>;
     var statusFilter = (string)ViewBag.StatusFilter;
+    var myReviews = ViewBag.MyReviews as System.Collections.Generic.Dictionary<int, Web.Models.Review>;
     var statuses = new[] { "", "Created", "Approved", "Completed", "Cancelled" };
 }
 
@@ -72,7 +73,7 @@
                                     <td style="padding:14px 16px">@r.NumberOfGuests</td>
                                     <td style="padding:14px 16px">&euro;@r.TotalPrice.ToString("0")</td>
                                     <td style="padding:14px 16px"><span class="badge badge-@r.Status.ToString().ToLower()">@r.Status</span></td>
-                                    <td style="padding:14px 16px;text-align:right">
+                                    <td style="padding:14px 16px;text-align:right;white-space:nowrap">
                                         @if (canCancel)
                                         {
                                             using (Html.BeginForm("Cancel", "Reservations", FormMethod.Post, new { style = "display:inline" }))
@@ -80,6 +81,24 @@
                                                 @Html.AntiForgeryToken()
                                                 <input type="hidden" name="id" value="@r.Id" />
                                                 <button type="submit" class="btn btn-ghost" style="padding:7px 14px;font-size:12px">Cancel</button>
+                                            }
+                                        }
+                                        else if (r.Status == Web.Models.ReservationStatus.Completed)
+                                        {
+                                            var rev = (myReviews != null && myReviews.ContainsKey(r.AccommodationId)) ? myReviews[r.AccommodationId] : null;
+                                            if (rev == null)
+                                            {
+                                                <a href="@Url.Action("Create", "Reviews", new { accommodationId = r.AccommodationId })" class="btn btn-gold" style="padding:7px 14px;font-size:12px">Write review</a>
+                                            }
+                                            else
+                                            {
+                                                <a href="@Url.Action("Edit", "Reviews", new { id = rev.Id })" class="btn btn-ghost" style="padding:7px 14px;font-size:12px">Edit review</a>
+                                                using (Html.BeginForm("Delete", "Reviews", FormMethod.Post, new { style = "display:inline;margin-left:6px" }))
+                                                {
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="id" value="@rev.Id" />
+                                                    <button type="submit" class="btn btn-ghost" style="padding:7px 14px;font-size:12px">Delete</button>
+                                                }
                                             }
                                         }
                                     </td>

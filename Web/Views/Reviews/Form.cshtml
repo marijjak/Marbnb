@@ -1,0 +1,47 @@
+@model Web.Models.ViewModels.ReviewFormViewModel
+@{
+    var isEdit = Model.Id > 0;
+    ViewBag.Title = isEdit ? "Edit review" : "Write a review";
+    var action = isEdit ? "Edit" : "Create";
+}
+
+<div class="wrap" style="padding:40px 0 64px;max-width:640px">
+    <a href="@Url.Action("Index", "Profile")" class="muted" style="font-size:13px">&larr; Back to profile</a>
+    <span class="kicker" style="display:block;margin-top:16px">@ViewBag.AccName</span>
+    <h1 class="serif" style="font-size:38px;margin:6px 0 24px">@ViewBag.Title</h1>
+
+    <div style="border:1px solid var(--border);border-radius:16px;padding:32px;background:var(--surface-2)">
+        @using (Html.BeginForm(action, "Reviews", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.AccommodationId)
+            @Html.ValidationSummary(true, "", new { @class = "alert" })
+
+            <div class="field">
+                <label>Rating</label>
+                @Html.DropDownListFor(m => m.Rating, new SelectList(new[] { 5, 4, 3, 2, 1 }, Model.Rating))
+                @Html.ValidationMessageFor(m => m.Rating, "", new { @class = "val" })
+            </div>
+
+            <div class="field">
+                <label>Title</label>
+                @Html.TextBoxFor(m => m.Title, new { placeholder = "A short headline" })
+                @Html.ValidationMessageFor(m => m.Title, "", new { @class = "val" })
+            </div>
+
+            <div class="field">
+                <label>Your review</label>
+                @Html.TextAreaFor(m => m.Content, new { rows = "5", placeholder = "Tell other guests about your stay" })
+                @Html.ValidationMessageFor(m => m.Content, "", new { @class = "val" })
+            </div>
+
+            <div class="field">
+                <label>Photo (optional)</label>
+                <input type="file" name="image" accept="image/*" />
+            </div>
+
+            <button type="submit" class="btn btn-gold" style="margin-top:8px">@(isEdit ? "Save changes" : "Submit review")</button>
+        }
+    </div>
+</div>

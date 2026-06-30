@@ -14,9 +14,6 @@
   <img src="https://img.shields.io/badge/storage-JSON%20files-C9A35E?style=flat" alt="JSON storage">
 </p>
 
-<p align="center">
-  <img src="Web/Content/img/hero.jpg" alt="marbnb" width="100%">
-</p>
 
 ---
 
